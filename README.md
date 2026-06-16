@@ -21,7 +21,7 @@ This project demonstrates how technology can help businesses improve efficiency 
 **Frontend**
 HTML
 CSS
-js
+Js
 
 ```text
 arizona-fast-food/
