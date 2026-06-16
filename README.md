@@ -2,9 +2,9 @@
 ## Welcome to Arizona fast food, where your order is what we deliver.
 
 # OVERVIEW
-Arizona Fast Food is a program that started 20 years ago and has been globally known. It is led by it's manager: Luisa and has been working very well and has never incured any loses
-We are thankful to the management for their work towards the company
+Arizona Fast Food is a long-standing food service program that has been in operation for over 20 years and is recognized globally for its reliable service and quality meals. The system is under the leadership of Luisa, whose guidance has played a key role in maintaining smooth operations and consistent growth.
 
+Throughout its years of operation, Arizona Fast Food has maintained stability and has never recorded any financial losses, highlighting its strong management and effective business practices. The company continues to appreciate the dedication of the leadership team, whose efforts have contributed significantly to its success and reputation.
 # Business Rationale
 
 The purpose of Arizona Fast Food is to:
