@@ -21,12 +21,7 @@ This project demonstrates how technology can help businesses improve efficiency 
 **Frontend**
 HTML
 CSS
-React.js
-
-** Backend**
--Django
-django Rest Framework(DRF)
-PostgreSQL
+js
 
 ```text
 arizona-fast-food/
