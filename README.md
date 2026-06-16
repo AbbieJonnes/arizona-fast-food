@@ -25,13 +25,19 @@ Js
 
 ```text
 arizona-fast-food/
-│
-├── assets/                  # Images and other static files
+
+├── assets/
 │   └── images/
-│
-├── index.html               # Main homepage
-└── README.md                # Project documentation
-|LICENSE                     # License Information                     
+
+├── index.html
+├── style.css
+├── app.js
+├── app.test.js
+├── package.json
+├── package-lock.json
+├── .gitignore
+├── README.md
+└── LICENSE                    
 ```
 
 ## Homepage
