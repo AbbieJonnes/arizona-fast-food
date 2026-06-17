@@ -74,7 +74,7 @@
 
         <!-- Contact Form -->
         <form class="max-w-md mx-auto text-left space-y-4"
-              action="mailto:abigaelmwangi534@gmail.com" method="POST" enctype="text/plain">
+              action="https://formspree.io/f/xwvjjwed" method="POST">
             <div>
                 <label for="name" class="block font-semibold text-black mb-1">Your Name:</label>
                 <input type="text" id="name" name="Name" required placeholder="e.g. John Kamau"
@@ -90,8 +90,13 @@
                 <textarea id="message" name="Message" required rows="4" placeholder="Type your message here..."
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"></textarea>
             </div>
-            <input type="submit" value="Send Message"
+            <button type="submit" id="submit-btn"
                 class="w-full bg-blue-700 hover:bg-blue-900 text-white font-semibold py-2 rounded-lg cursor-pointer transition">
+                Send Message
+            </button>
+            <p id="form-success" class="hidden text-center text-green-600 font-semibold">
+                Message sent successfully! We'll get back to you soon.
+            </p>
         </form>
     </section>
 
@@ -109,5 +114,34 @@
 </footer>
 
 <script src="app.js"></script>
+<script>
+    // Contact form — send via Formspree without page reload
+    const contactForm = document.querySelector('#contact form');
+    contactForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const btn = document.getElementById('submit-btn');
+        const success = document.getElementById('form-success');
+
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
+        const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: new FormData(contactForm),
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+            contactForm.reset();
+            btn.classList.add('hidden');
+            success.classList.remove('hidden');
+        } else {
+            btn.textContent = 'Send Message';
+            btn.disabled = false;
+            alert('Something went wrong. Please try again.');
+        }
+    });
+</script>
 </body>
 </html>
