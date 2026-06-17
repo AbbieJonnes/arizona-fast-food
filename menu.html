@@ -57,6 +57,48 @@
     <p>&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
+<!-- M-PESA MODAL -->
+<div id="mpesa-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-80 p-6 text-center">
+
+        <!-- M-Pesa Header -->
+        <div class="bg-green-600 -mx-6 -mt-6 rounded-t-2xl py-4 mb-6">
+            <p class="text-white font-bold text-lg tracking-wide">M-PESA</p>
+            <p class="text-green-100 text-sm">Safaricom</p>
+        </div>
+
+        <!-- Amount -->
+        <p class="text-gray-500 text-sm mb-1">Pay to</p>
+        <p class="font-bold text-black text-base mb-1">ARIZONA FAST FOOD</p>
+        <p id="mpesa-amount" class="text-green-600 font-bold text-2xl mb-5"></p>
+
+        <!-- PIN Input -->
+        <p class="text-gray-600 text-sm mb-2">Enter M-Pesa PIN</p>
+        <input id="mpesa-pin" type="password" maxlength="4" placeholder="● ● ● ●"
+            class="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest focus:outline-none focus:border-green-500 mb-1">
+        <p id="pin-error" class="text-red-500 text-xs mb-4 hidden">Wrong PIN. Try again.</p>
+
+        <!-- Processing spinner (hidden by default) -->
+        <div id="mpesa-processing" class="hidden mb-4">
+            <div class="inline-block w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-gray-500 text-sm mt-2">Processing payment...</p>
+        </div>
+
+        <!-- Buttons -->
+        <div id="mpesa-buttons" class="flex gap-3">
+            <button onclick="cancelMpesa()"
+                class="flex-1 border-2 border-gray-300 text-gray-600 font-semibold py-2 rounded-xl hover:bg-gray-100 transition">
+                Cancel
+            </button>
+            <button onclick="confirmMpesa()"
+                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition">
+                Confirm
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
