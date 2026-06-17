@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================
-    // GO TO RECEIPT PAGE
+    // PAY NOW → OPEN M-PESA MODAL
     // =====================
     window.goToReceipt = function () {
         if (cart.length === 0) {
@@ -126,19 +126,60 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Generate order number
-        const orderNo = "AFF-" + Date.now().toString().slice(-6);
-        const total   = calculateTotal();
+        const total = calculateTotal();
 
-        // Save order to localStorage so receipt.html can read it
-        localStorage.setItem("arizona_order", JSON.stringify({
-            orderNo,
-            cart,
-            total
-        }));
+        // Show amount in modal
+        document.getElementById("mpesa-amount").textContent = `Ksh ${total}`;
 
-        // Navigate to receipt page
-        window.location.href = "receipt.html";
+        // Reset modal state
+        document.getElementById("mpesa-pin").value = "";
+        document.getElementById("pin-error").classList.add("hidden");
+        document.getElementById("mpesa-processing").classList.add("hidden");
+        document.getElementById("mpesa-buttons").classList.remove("hidden");
+        document.getElementById("mpesa-pin").classList.remove("hidden");
+
+        // Show modal
+        document.getElementById("mpesa-modal").classList.remove("hidden");
+    };
+
+    // =====================
+    // CONFIRM M-PESA PIN
+    // =====================
+    window.confirmMpesa = function () {
+        const pin = document.getElementById("mpesa-pin").value;
+
+        if (pin.length < 4) {
+            document.getElementById("pin-error").textContent = "Please enter your 4-digit PIN.";
+            document.getElementById("pin-error").classList.remove("hidden");
+            return;
+        }
+
+        // Hide buttons and PIN, show spinner
+        document.getElementById("mpesa-buttons").classList.add("hidden");
+        document.getElementById("mpesa-pin").classList.add("hidden");
+        document.getElementById("pin-error").classList.add("hidden");
+        document.getElementById("mpesa-processing").classList.remove("hidden");
+
+        // Simulate processing delay then go to receipt
+        setTimeout(() => {
+            const orderNo = "AFF-" + Date.now().toString().slice(-6);
+            const total   = calculateTotal();
+
+            localStorage.setItem("arizona_order", JSON.stringify({
+                orderNo,
+                cart,
+                total
+            }));
+
+            window.location.href = "receipt.html";
+        }, 2500);
+    };
+
+    // =====================
+    // CANCEL M-PESA MODAL
+    // =====================
+    window.cancelMpesa = function () {
+        document.getElementById("mpesa-modal").classList.add("hidden");
     };
 
     // =====================
