@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    // Only run menu logic if we're on menu.html
+    const menuDiv = document.getElementById("menu-items");
+    if (!menuDiv) return;
+
     // =====================
     // MENU ITEMS
     // =====================
@@ -17,12 +21,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================
     let cart = [];
 
-    // =====================
-    // DOM ELEMENTS
-    // =====================
-    const menuDiv    = document.getElementById("menu-items");
-    const cartDiv    = document.getElementById("cart");
-    const receiptDiv = document.getElementById("receipt");
+    const cartDiv      = document.getElementById("cart");
+    const summaryDiv   = document.getElementById("order-summary");
+    const summaryLines = document.getElementById("summary-lines");
+    const summaryTotal = document.getElementById("summary-total");
 
     // =====================
     // BUILD MENU CARDS
@@ -47,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================
-    // TOGGLE: ADD / REMOVE FROM CART
+    // TOGGLE CART
     // =====================
     window.toggleCart = function (id) {
         const item   = menuItems.find(i => i.id === id);
@@ -68,14 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // =====================
-    // UPDATE CART DISPLAY
+    // UPDATE CART
     // =====================
     function updateCart() {
         cartDiv.innerHTML = `<h2 class="text-xl font-bold text-black text-center mb-4">Your Cart</h2>`;
 
         if (cart.length === 0) {
             cartDiv.innerHTML += `<p class="text-center text-gray-400 italic">Your cart is empty.</p>`;
-            receiptDiv.classList.add("hidden");
+            summaryDiv.classList.add("hidden");
             return;
         }
 
@@ -88,92 +90,67 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
         });
 
-        updateReceipt();
+        updateSummary();
     }
 
     // =====================
-    // UPDATE RECEIPT PREVIEW
+    // UPDATE ORDER SUMMARY
     // =====================
-    function updateReceipt() {
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
+    function updateSummary() {
+        const total = calculateTotal();
 
-        receiptDiv.classList.remove("hidden");
+        summaryDiv.classList.remove("hidden");
+        summaryLines.innerHTML = "";
 
-        let lines = "";
         cart.forEach(item => {
-            lines += `
-                <div class="flex justify-between py-2 border-b border-dashed border-gray-200 text-black">
+            summaryLines.innerHTML += `
+                <div class="flex justify-between py-2 border-b border-dashed border-gray-200 text-black text-sm">
                     <span>${item.name}</span>
                     <span>Ksh ${item.price}</span>
                 </div>
             `;
         });
 
-        receiptDiv.innerHTML = `
-            <h2 class="text-xl font-bold text-black text-center mb-4">Order Summary</h2>
-            ${lines}
-            <div class="flex justify-between pt-4 font-bold text-red-600 text-lg">
-                <span>TOTAL (${cart.length} item${cart.length > 1 ? "s" : ""})</span>
-                <span>Ksh ${total}</span>
-            </div>
-            <button onclick="completePurchase()"
-                class="mt-4 w-full bg-blue-700 hover:bg-blue-900 text-white font-bold py-3 rounded-xl transition text-lg">
-                Pay Now — Ksh ${total}
-            </button>
+        summaryTotal.innerHTML = `
+            <span>TOTAL (${cart.length} item${cart.length > 1 ? "s" : ""})</span>
+            <span>Ksh ${total}</span>
         `;
     }
 
     // =====================
-    // COMPLETE PURCHASE
+    // GO TO RECEIPT PAGE
     // =====================
-    window.completePurchase = function () {
+    window.goToReceipt = function () {
         if (cart.length === 0) {
             alert("Your cart is empty! Add items first.");
             return;
         }
 
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        const now   = new Date().toLocaleString();
-        let itemLines = cart.map(i => `  - ${i.name.padEnd(20)} Ksh ${i.price}`).join("\n");
+        // Generate order number
+        const orderNo = "AFF-" + Date.now().toString().slice(-6);
+        const total   = calculateTotal();
 
-        alert(
-`━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ARIZONA FAST FOOD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━
- Date: ${now}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${itemLines}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━
- TOTAL:              Ksh ${total}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━
- Thank you for your order!
-━━━━━━━━━━━━━━━━━━━━━━━━━━━`
-        );
+        // Save order to localStorage so receipt.html can read it
+        localStorage.setItem("arizona_order", JSON.stringify({
+            orderNo,
+            cart,
+            total
+        }));
 
-        // Reset cart state
-        cart = [];
-
-        // Reset all buttons to green "Add to Cart"
-        menuItems.forEach(item => {
-            const btn = document.getElementById(`btn-${item.id}`);
-            if (btn) {
-                btn.textContent = "Add to Cart";
-                btn.className = "w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition";
-            }
-        });
-
-        cartDiv.innerHTML = `
-            <h2 class="text-xl font-bold text-black text-center mb-4">Your Cart</h2>
-            <p class="text-center text-gray-400 italic">Your cart is empty.</p>
-        `;
-        receiptDiv.classList.add("hidden");
+        // Navigate to receipt page
+        window.location.href = "receipt.html";
     };
 
     // =====================
-    // UTILITY (for testing)
+    // UTILITY
     // =====================
     window.calculateTotal = function () {
         return cart.reduce((sum, item) => sum + item.price, 0);
     };
+
+    // Internal alias (same function)
+    function calculateTotal() {
+        return cart.reduce((sum, item) => sum + item.price, 0);
+    }
 
 });
