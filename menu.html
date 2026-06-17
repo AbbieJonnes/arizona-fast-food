@@ -2,41 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu - Arizona Fast Food</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-cyan-300 min-h-screen">
 
 <!-- HEADER -->
-<header>
-    <h1>Arizona Fast Food Menu</h1>
-
+<header class="bg-black text-white text-center py-6 px-4 sticky top-0 z-50 shadow-lg">
+    <h1 class="text-3xl font-bold tracking-widest mb-4">ARIZONA FAST FOOD</h1>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="menu.html">Menu</a>
+        <ul class="flex justify-center gap-6 flex-wrap">
+            <li><a href="index.html" class="text-gray-300 hover:text-yellow-400 font-semibold transition">Home</a></li>
+            <li><a href="menu.html"  class="text-yellow-400 font-semibold border-b-2 border-yellow-400">Menu</a></li>
+        </ul>
     </nav>
 </header>
 
-<!-- MAIN CONTENT -->
-<main>
+<main class="max-w-5xl mx-auto px-4 py-12">
 
-    <section id="menu"></section>
-
-    <section id="cart">
-        <h2>Your Cart</h2>
+    <!-- MENU ITEMS -->
+    <section id="menu">
+        <h2 class="text-2xl font-bold italic text-black text-center mb-2">Our Menu</h2>
+        <p class="text-center italic text-black mb-8">Click "Add to Cart" on any item to order!</p>
+        <div id="menu-items" class="flex flex-wrap justify-center gap-6"></div>
     </section>
 
-    <section id="receipt"></section>
+    <!-- CART -->
+    <section class="mt-12">
+        <div id="cart" class="bg-white rounded-2xl shadow-md p-6 max-w-lg mx-auto">
+            <h2 class="text-xl font-bold text-black text-center mb-4">Your Cart</h2>
+            <p id="empty-msg" class="text-center text-gray-400 italic">Your cart is empty.</p>
+        </div>
+    </section>
+
+    <!-- ORDER SUMMARY + CHECKOUT -->
+    <section class="mt-6">
+        <div id="order-summary" class="bg-white rounded-2xl shadow-md p-6 max-w-lg mx-auto hidden">
+            <h2 class="text-xl font-bold text-black text-center mb-4">Order Summary</h2>
+            <div id="summary-lines"></div>
+            <div id="summary-total" class="flex justify-between pt-4 font-bold text-red-600 text-lg"></div>
+            <button onclick="goToReceipt()"
+                class="mt-4 w-full bg-blue-700 hover:bg-blue-900 text-white font-bold py-3 rounded-xl transition text-lg">
+                Pay Now
+            </button>
+        </div>
+    </section>
 
 </main>
 
 <!-- FOOTER -->
-<footer>
+<footer class="bg-black text-white text-center py-6 mt-12">
     <p>&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
 <script src="app.js"></script>
-
 </body>
 </html>
