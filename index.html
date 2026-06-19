@@ -81,6 +81,7 @@
             <li><a href="#home"     class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">HOME</a></li>
             <li><a href="#about"    class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">ABOUT</a></li>
             <li><a href="#services" class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">SERVICES</a></li>
+            <li><a href="#why-us"   class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">WHY US</a></li>
             <li><a href="menu.html" class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">MENU</a></li>
             <li><a href="#contact"  class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">CONTACT</a></li>
         </ul>
@@ -118,10 +119,10 @@
                 Burgers, fries, chicken sandwiches and more — made fresh, served hot.
             </p>
 
-            <a href="menu.html"
+            <button onclick="getStarted()"
                class="inline-block mt-8 bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 px-10 rounded-full text-lg transition shadow-lg hover:shadow-yellow-400/40">
-                Order Now
-            </a>
+                Get Started
+            </button>
         </div>
     </section>
 
@@ -196,6 +197,30 @@
         </div>
     </section>
 
+    <!-- WHY CHOOSE US -->
+    <section id="why-us" class="py-20 px-6 text-center section-warm">
+        <p class="text-red-700 text-xs tracking-widest uppercase font-semibold mb-2">The Arizona Difference</p>
+        <h2 class="text-3xl font-black text-gray-900 mb-10">Why Choose Us</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div class="bg-white card-hover rounded-2xl p-7 shadow-md border border-orange-100">
+                <i class="fas fa-leaf text-3xl text-red-700 mb-4"></i>
+                <p class="font-black text-gray-900 mb-2">Fresh Ingredients</p>
+                <p class="text-gray-500 text-sm">Every meal is made fresh daily using quality, locally sourced ingredients.</p>
+            </div>
+            <div class="bg-white card-hover rounded-2xl p-7 shadow-md border border-orange-100">
+                <i class="fas fa-clock text-3xl text-red-700 mb-4"></i>
+                <p class="font-black text-gray-900 mb-2">Fast Service</p>
+                <p class="text-gray-500 text-sm">Quick, friendly service so you get your food hot and on time, every time.</p>
+            </div>
+            <div class="bg-white card-hover rounded-2xl p-7 shadow-md border border-orange-100">
+                <i class="fas fa-heart text-3xl text-red-700 mb-4"></i>
+                <p class="font-black text-gray-900 mb-2">Made with Love</p>
+                <p class="text-gray-500 text-sm">A family-run business that treats every customer like part of the family.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- CONTACT -->
     <section id="contact" class="py-20 px-6 text-center section-warm">
         <p class="text-red-700 text-xs tracking-widest uppercase font-semibold mb-2">Get In Touch</p>
@@ -213,7 +238,6 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border border-orange-100">
-                
                 <a href="https://mail.google.com/mail/?view=cm&to=mwangichristine201@gmail.com" target="_blank"
                    class="text-red-700 font-bold text-base hover:underline">
                    mwangichristine201@gmail.com
@@ -252,18 +276,58 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="hero-bg text-white text-center py-8">
-    <h3 class="text-yellow-400 font-black text-lg tracking-widest mb-1">ARIZONA FAST FOOD</h3>
-    <p class="text-orange-200 text-xs italic mb-4">Nairobi, Kenya</p>
-    <div class="flex justify-center gap-6 text-2xl mb-4">
-        <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-tiktok"></i></a>
-        <a href="#" class="text-gray-400 hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.me/254113368871" target="_blank" class="text-gray-400 hover:text-green-400 transition"><i class="fab fa-whatsapp"></i></a>
+<footer class="hero-bg text-white pt-12 pb-6 px-6">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left mb-8">
+
+        <!-- About -->
+        <div>
+            <h3 class="text-yellow-400 font-black text-lg tracking-widest mb-2">ARIZONA FAST FOOD</h3>
+            <p class="text-orange-200 text-sm italic">Self-owned, serving Nairobi with pride</p>
+        </div>
+
+        <!-- Location -->
+        <div>
+            <h4 class="text-white font-bold text-sm uppercase tracking-wide mb-3">Find Us</h4>
+            <p class="text-orange-200 text-sm flex items-center justify-center md:justify-start gap-2 mb-1">
+                <i class="fas fa-map-marker-alt text-yellow-400"></i> Nairobi, Kenya
+            </p>
+            <p class="text-orange-200 text-sm flex items-center justify-center md:justify-start gap-2 mb-1">
+                <i class="fas fa-phone text-yellow-400"></i> 0113 368 871
+            </p>
+            <p class="text-orange-200 text-sm flex items-center justify-center md:justify-start gap-2">
+                <i class="fas fa-clock text-yellow-400"></i> Open Daily: 8am – 10pm
+            </p>
+        </div>
+
+        <!-- Social -->
+        <div>
+            <h4 class="text-white font-bold text-sm uppercase tracking-wide mb-3">Follow Us</h4>
+            <div class="flex justify-center md:justify-start gap-5 text-2xl">
+                <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+                <a href="#" class="text-gray-400 hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
+                <a href="https://wa.me/254113368871" target="_blank" class="text-gray-400 hover:text-green-400 transition"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+
     </div>
-    <p class="text-gray-500 text-xs">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
+
+    <p class="text-center text-gray-500 text-xs border-t border-white/10 pt-5">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
+<script>
+    function getStarted() {
+        const currentUser = JSON.parse(localStorage.getItem('arizona_current_user') || 'null');
+        if (currentUser) {
+            // Already logged in, go straight to menu
+            window.location.href = 'menu.html';
+        } else {
+            // Not logged in, send to login page
+            sessionStorage.setItem('redirect_after_login', 'menu.html');
+            window.location.href = 'login.html';
+        }
+    }
+</script>
 <script src="app.js"></script>
 <script>
     const contactForm = document.querySelector('#contact form');
