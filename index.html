@@ -282,7 +282,7 @@
         <!-- About -->
         <div>
             <h3 class="text-yellow-400 font-black text-lg tracking-widest mb-2">ARIZONA FAST FOOD</h3>
-            <p class="text-orange-200 text-sm italic">Self-owned, serving Nairobi with pride</p>
+            <p class="text-orange-200 text-sm italic">Family-owned, serving Nairobi with pride since 2004.</p>
         </div>
 
         <!-- Location -->
@@ -317,15 +317,9 @@
 
 <script>
     function getStarted() {
-        const currentUser = JSON.parse(localStorage.getItem('arizona_current_user') || 'null');
-        if (currentUser) {
-            // Already logged in, go straight to menu
-            window.location.href = 'menu.html';
-        } else {
-            // Not logged in, send to login page
-            sessionStorage.setItem('redirect_after_login', 'menu.html');
-            window.location.href = 'login.html';
-        }
+        // Always go to login page, even if already logged in
+        sessionStorage.setItem('redirect_after_login', 'menu.html');
+        window.location.href = 'login.html';
     }
 </script>
 <script src="app.js"></script>
