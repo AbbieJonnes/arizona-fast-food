@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Number - Arizona Fast Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .input-field {
+            background: #fff8f0; border: 2px solid #e8c99a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none; border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4" style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%);">
+
+<div class="w-full max-w-sm">
+
+    <h1 class="text-2xl font-black tracking-widest text-red-700 text-center mb-1">ARIZONA FAST FOOD</h1>
+    <p class="text-gray-500 text-center text-sm italic mb-8">Dine-in Order</p>
+
+    <div class="bg-white rounded-2xl shadow-xl p-7 border border-orange-100">
+        <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-chair text-2xl text-red-700"></i>
+        </div>
+        <h2 class="text-lg font-black text-gray-900 text-center mb-2">What's your table number?</h2>
+        <p class="text-gray-500 text-sm text-center mb-6">This helps our staff bring your order to the right table.</p>
+
+        <form onsubmit="return submitTable(event)">
+            <input id="table-number" type="text" required placeholder="e.g. 5 or A2"
+                class="input-field w-full rounded-xl px-4 py-3 text-center text-xl font-bold mb-4">
+            <button type="submit"
+                class="w-full bg-red-700 hover:bg-red-800 text-white font-black py-3 rounded-xl transition shadow-md">
+                Continue to Menu
+            </button>
+        </form>
+    </div>
+
+    <p class="text-center text-gray-400 text-xs mt-6">
+        <a href="welcome.html" class="hover:text-red-700 transition">&larr; Back</a>
+    </p>
+
+</div>
+
+<script>
+    function submitTable(e) {
+        e.preventDefault();
+        const tableNumber = document.getElementById('table-number').value.trim();
+
+        const orderMode = JSON.parse(localStorage.getItem('arizona_order_mode') || '{}');
+        orderMode.type = 'dinein';
+        orderMode.tableNumber = tableNumber;
+        localStorage.setItem('arizona_order_mode', JSON.stringify(orderMode));
+
+        window.location.href = 'menu.html';
+        return false;
+    }
+</script>
+<script src="chatbot.js"></script>
+
+</body>
+</html>
