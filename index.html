@@ -75,7 +75,7 @@
     <h1 class="text-3xl font-black tracking-widest text-yellow-400 mb-1" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.5)">
         ARIZONA FAST FOOD
     </h1>
-    <!--<p class="text-orange-200 text-xs tracking-widest mb-4 italic">Est. 2004 · Nairobi, Kenya</p> -->
+    <p class="text-orange-200 text-xs tracking-widest mb-4 italic">Est. 2004 · Nairobi, Kenya</p>
     <nav aria-label="Main Navigation">
         <ul class="flex justify-center gap-8 flex-wrap">
             <li><a href="#home"     class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">HOME</a></li>
@@ -237,13 +237,6 @@
                 </a>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border border-orange-100">
-                <a href="https://mail.google.com/mail/?view=cm&to=mwangichristine201@gmail.com" target="_blank"
-                   class="text-red-700 font-bold text-base hover:underline">
-                   mwangichristine201@gmail.com
-                </a>
-            </div>
-
             <!-- Contact Form -->
             <form class="bg-white rounded-2xl shadow-md p-6 border border-orange-100 text-left space-y-4"
                   action="https://formspree.io/f/xwvjjwed" method="POST">
@@ -316,9 +309,16 @@
 </footer>
 
 <script>
+    // If QR code was scanned with a table number, remember it for later
+    const urlParams = new URLSearchParams(window.location.search);
+    const scannedTable = urlParams.get('table');
+    if (scannedTable) {
+        sessionStorage.setItem('scanned_table', scannedTable);
+    }
+
     function getStarted() {
         // Always go to login page, even if already logged in
-        sessionStorage.setItem('redirect_after_login', 'menu.html');
+        sessionStorage.setItem('redirect_after_login', 'welcome.html');
         window.location.href = 'login.html';
     }
 </script>
@@ -345,7 +345,6 @@
             btn.disabled = false;
             alert('Something went wrong. Please try again.');
         }
-    });
 </script>
 <script src="chatbot.js"></script>
 </body>
