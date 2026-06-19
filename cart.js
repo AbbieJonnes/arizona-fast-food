@@ -11,9 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================
-    // LOAD CART
+    // LOAD CART + ORDER MODE
     // =====================
     let cart = JSON.parse(localStorage.getItem("arizona_cart") || "[]");
+    const orderMode = JSON.parse(localStorage.getItem("arizona_order_mode") || "null");
+
+    if (!orderMode || !orderMode.type) {
+        window.location.href = "welcome.html";
+        return;
+    }
+
+    const deliveryFee = orderMode.type === "delivery" ? (orderMode.deliveryFee || 0) : 0;
 
     const cartItemsDiv = document.getElementById("cart-items");
     const emptyCartDiv = document.getElementById("empty-cart");
@@ -25,8 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("arizona_cart", JSON.stringify(cart));
     }
 
-    function calculateTotal() {
+    function calculateSubtotal() {
         return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    }
+
+    function calculateTotal() {
+        return calculateSubtotal() + deliveryFee;
     }
 
     function calculateItemCount() {
@@ -82,6 +94,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         totalItemsEl.textContent = `${calculateItemCount()} item${calculateItemCount() > 1 ? "s" : ""}`;
+
+        // Show subtotal + delivery fee breakdown if delivery
+        const breakdownEl = document.getElementById("fee-breakdown");
+        if (orderMode.type === "delivery") {
+            if (breakdownEl) {
+                breakdownEl.innerHTML = `
+                    <div class="flex justify-between text-sm text-gray-600 pb-1">
+                        <span>Subtotal</span><span>Ksh ${calculateSubtotal()}</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 pb-2 border-b border-dashed border-gray-200">
+                        <span>Delivery Fee</span><span>Ksh ${deliveryFee}</span>
+                    </div>
+                `;
+            }
+        }
+
         totalAmountEl.textContent = `Ksh ${calculateTotal()}`;
     }
 
@@ -151,14 +179,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setTimeout(() => {
             const orderNo = "AFF-" + Date.now().toString().slice(-6);
+            const subtotal = calculateSubtotal();
             const total = calculateTotal();
 
-            localStorage.setItem("arizona_order", JSON.stringify({ orderNo, cart, total }));
+            const orderData = {
+                orderNo,
+                cart,
+                subtotal,
+                deliveryFee,
+                total,
+                orderMode
+            };
+
+            localStorage.setItem("arizona_order", JSON.stringify(orderData));
             localStorage.removeItem("arizona_cart"); // clear cart after payment
+            localStorage.removeItem("arizona_order_mode"); // clear order mode for next order
+
+            // Notify staff via Formspree (fire and forget)
+            notifyStaff(orderNo, total);
 
             window.location.href = "receipt.html";
         }, 2500);
     };
+
+    // =====================
+    // NOTIFY STAFF OF NEW ORDER
+    // =====================
+    function notifyStaff(orderNo, total) {
+        const itemsList = cart.map(i => `${i.name} x${i.qty} (Ksh ${i.price * i.qty})`).join(", ");
+        const orderTypeText = orderMode.type === "dinein"
+            ? `Dine-in - Table ${orderMode.tableNumber}`
+            : `Delivery - ${orderMode.address} (Phone: ${orderMode.phone})`;
+
+        const formData = new FormData();
+        formData.append("Order Number", orderNo);
+        formData.append("Customer", currentUser.name);
+        formData.append("Customer Phone", currentUser.phone);
+        formData.append("Order Type", orderTypeText);
+        formData.append("Items", itemsList);
+        formData.append("Total", `Ksh ${total}`);
+
+        fetch("https://formspree.io/f/xwvjjwed", {
+            method: "POST",
+            body: formData,
+            headers: { "Accept": "application/json" }
+        }).catch(() => {
+            // Silent fail - don't block the customer's checkout if notification fails
+            console.log("Staff notification failed to send.");
+        });
+    }
 
     window.cancelMpesa = function () {
         document.getElementById("mpesa-modal").classList.add("hidden");
