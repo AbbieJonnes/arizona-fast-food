@@ -6,20 +6,83 @@
     <title>ARIZONA FAST FOOD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#c0392b',
+                        gold: '#f39c12',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+
+        .hero-bg {
+            background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%);
+        }
+        .section-warm {
+            background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%);
+        }
+        .section-dark {
+            background: linear-gradient(180deg, #1c1c1c 0%, #2d2d2d 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(192,57,43,0.2);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #f39c12;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .service-card {
+            background: linear-gradient(135deg, #c0392b, #922b21);
+        }
+        .input-field {
+            background: #fff8f0;
+            border: 2px solid #e8c99a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+        }
+    </style>
 </head>
 
-<body class="bg-cyan-300 text-gray-700">
+<body class="text-gray-800">
 
 <!-- HEADER -->
-<header class="bg-black text-white text-center py-6 px-4 sticky top-0 z-50 shadow-lg">
-    <h1 class="text-3xl font-bold tracking-widest text-white mb-4">ARIZONA FAST FOOD</h1>
+<header class="hero-bg text-white text-center py-5 px-4 sticky top-0 z-50 shadow-2xl">
+    <h1 class="text-3xl font-black tracking-widest text-yellow-400 mb-1" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.5)">
+        ARIZONA FAST FOOD
+    </h1>
+    <!--<p class="text-orange-200 text-xs tracking-widest mb-4 italic">Est. 2004 · Nairobi, Kenya</p> -->
     <nav aria-label="Main Navigation">
-        <ul class="flex justify-center gap-6 flex-wrap">
-            <li><a href="#home"    class="text-gray-300 hover:text-yellow-400 font-semibold transition">Home</a></li>
-            <li><a href="#about"   class="text-gray-300 hover:text-yellow-400 font-semibold transition">About</a></li>
-            <li><a href="#services"class="text-gray-300 hover:text-yellow-400 font-semibold transition">Services</a></li>
-            <li><a href="menu.html" class="text-gray-300 hover:text-yellow-400 font-semibold transition">Menu</a></li>
-            <li><a href="#contact" class="text-gray-300 hover:text-yellow-400 font-semibold transition">Contact</a></li>
+        <ul class="flex justify-center gap-8 flex-wrap">
+            <li><a href="#home"     class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">HOME</a></li>
+            <li><a href="#about"    class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">ABOUT</a></li>
+            <li><a href="#services" class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">SERVICES</a></li>
+            <li><a href="menu.html" class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">MENU</a></li>
+            <li><a href="#contact"  class="nav-link text-gray-300 hover:text-yellow-400 font-semibold transition text-sm tracking-wide">CONTACT</a></li>
         </ul>
     </nav>
 </header>
@@ -27,119 +90,194 @@
 <main>
 
     <!-- HOME -->
-    <section id="home" class="py-16 px-6 text-center bg-cyan-300">
-        <h2 class="text-2xl font-bold italic text-black mb-4">WELCOME TO ARIZONA FAST FOOD</h2>
-        <img src="assets/images/home.jpg" alt="Welcome" class="mx-auto rounded-xl shadow-md mb-4 object-cover" width="500" height="400">
-        <p class="italic text-black max-w-xl mx-auto">
-            Experience the best fast food in Arizona!<br>
-            We offer a wide variety of delicious meals from burgers, fries, chicken sandwiches and more.
-        </p>
+    <section id="home" class="relative py-24 px-6 text-center overflow-hidden"
+             style="background: linear-gradient(135deg, #3d1a00 0%, #7b3a1e 40%, #3d1a00 100%);">
+        <!-- Decorative circles -->
+        <div class="absolute top-0 left-0 w-64 h-64 rounded-full opacity-10"
+             style="background: radial-gradient(circle, #f39c12, transparent); transform: translate(-30%, -30%)"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 rounded-full opacity-10"
+             style="background: radial-gradient(circle, #c0392b, transparent); transform: translate(30%, 30%)"></div>
+
+        <div class="relative z-10">
+            <p class="text-yellow-400 text-sm tracking-widest uppercase mb-3 font-semibold">Welcome to</p>
+            <h2 class="text-4xl font-black text-white mb-2" style="text-shadow: 2px 2px 12px rgba(0,0,0,0.6)">
+                ARIZONA FAST FOOD
+            </h2>
+            <p class="text-orange-200 italic mb-8 text-lg">Where every bite tells a story</p>
+
+            <div class="relative inline-block">
+                <img src="assets/images/home.jpg" alt="Welcome"
+                     class="mx-auto rounded-2xl shadow-2xl object-cover border-4 border-yellow-400/30"
+                     style="width:500px; height:350px; object-fit:cover">
+                <div class="absolute inset-0 rounded-2xl"
+                     style="background: linear-gradient(to top, rgba(61,26,0,0.6) 0%, transparent 60%)"></div>
+            </div>
+
+            <p class="text-orange-100 max-w-xl mx-auto mt-8 text-base leading-relaxed">
+                Experience the finest fast food in Nairobi!
+                Burgers, fries, chicken sandwiches and more — made fresh, served hot.
+            </p>
+
+            <a href="menu.html"
+               class="inline-block mt-8 bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 px-10 rounded-full text-lg transition shadow-lg hover:shadow-yellow-400/40">
+                Order Now
+            </a>
+        </div>
     </section>
 
     <!-- ABOUT -->
-    <section id="about" class="py-16 px-6 text-center bg-white/40">
-        <h2 class="text-2xl font-bold italic text-black mb-4">About Us</h2>
-        <img src="assets/images/aboutus.jpg" alt="About" class="mx-auto rounded-xl shadow-md mb-4 object-cover" width="400" height="300">
-        <p class="italic text-black max-w-xl mx-auto">
-            ARIZONA FAST FOOD is a family-owned business serving the community for over 20 years.
-            We focus on quality food and excellent service.
-        </p>
+    <section id="about" class="py-20 px-6 text-center section-warm">
+        <p class="text-red-700 text-xs tracking-widest uppercase font-semibold mb-2">Our Story</p>
+        <h2 class="text-3xl font-black text-gray-900 mb-8">About Us</h2>
+
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            <div class="relative flex-shrink-0">
+                <img src="assets/images/aboutus.jpg" alt="About"
+                     class="rounded-2xl shadow-xl object-cover border-4 border-orange-200"
+                     width="380" height="280" style="object-fit:cover">
+                <div class="absolute -bottom-4 -right-4 bg-red-700 text-white rounded-xl px-4 py-2 text-sm font-bold shadow-lg">
+                    20+ Years
+                </div>
+            </div>
+            <div class="text-left">
+                <p class="text-gray-700 text-base leading-relaxed mb-4">
+                    ARIZONA FAST FOOD is a family-owned business proudly serving the Nairobi community
+                    for over 20 years. What started as a small roadside kitchen has grown into one of
+                    the most loved fast food spots in the city.
+                </p>
+                <p class="text-gray-700 text-base leading-relaxed">
+                    We are passionate about quality food, warm hospitality, and making every customer
+                    feel at home. Every meal is prepared fresh with love and the finest ingredients.
+                </p>
+                <div class="flex gap-6 mt-6">
+                    <div class="text-center">
+                        <p class="text-3xl font-black text-red-700">20+</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Years</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl font-black text-red-700">500+</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Daily Orders</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl font-black text-red-700">100%</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Fresh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SERVICES -->
-    <section id="services" class="py-16 px-6 text-center bg-cyan-300">
-        <h2 class="text-2xl font-bold italic text-black mb-4">Our Services</h2>
-        <img src="assets/images/service.jpg" alt="Services" class="mx-auto rounded-xl shadow-md mb-4 object-cover" width="400" height="300">
-        <ul class="mt-4 space-y-2 text-black font-medium text-lg">
-            <li>Dine-in</li>
-            <li>Takeout</li>
-            <li>Delivery</li>
-            <li>Catering</li>
-        </ul>
+    <section id="services" class="py-20 px-6 text-center section-dark">
+        <p class="text-yellow-400 text-xs tracking-widest uppercase font-semibold mb-2">What We Offer</p>
+        <h2 class="text-3xl font-black text-white mb-4">Our Services</h2>
+
+        <img src="assets/images/service.jpg" alt="Services"
+             class="mx-auto rounded-2xl shadow-xl object-cover border-4 border-white/10 mb-10"
+             width="400" height="260" style="object-fit:cover">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div class="service-card card-hover rounded-2xl p-6 text-white shadow-lg">
+                <i class="fas fa-utensils text-2xl mb-3 text-yellow-300"></i>
+                <p class="font-bold text-sm">Dine-in</p>
+            </div>
+            <div class="service-card card-hover rounded-2xl p-6 text-white shadow-lg">
+                <i class="fas fa-shopping-bag text-2xl mb-3 text-yellow-300"></i>
+                <p class="font-bold text-sm">Takeout</p>
+            </div>
+            <div class="service-card card-hover rounded-2xl p-6 text-white shadow-lg">
+                <i class="fas fa-motorcycle text-2xl mb-3 text-yellow-300"></i>
+                <p class="font-bold text-sm">Delivery</p>
+            </div>
+            <div class="service-card card-hover rounded-2xl p-6 text-white shadow-lg">
+                <i class="fas fa-concierge-bell text-2xl mb-3 text-yellow-300"></i>
+                <p class="font-bold text-sm">Catering</p>
+            </div>
+        </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="py-16 px-6 text-center bg-white/40">
-        <h2 class="text-2xl font-bold italic text-black mb-2">Contact Us</h2>
-        <p class="italic text-black mb-6">We'd love to hear from you!</p>
+    <section id="contact" class="py-20 px-6 text-center section-warm">
+        <p class="text-red-700 text-xs tracking-widest uppercase font-semibold mb-2">Get In Touch</p>
+        <h2 class="text-3xl font-black text-gray-900 mb-2">Contact Us</h2>
+        <p class="text-gray-500 italic mb-10">We'd love to hear from you!</p>
 
-        <!-- Her email displayed -->
-        <div class="mb-8">
-            <p class="text-black font-semibold mb-1">Email us directly:</p>
-            <a href="https://mail.google.com/mail/?view=cm&to=abigaelmwangi534@gmail.com" target="_blank"
-               class="text-blue-700 font-bold text-lg hover:underline">
-                abigaelmwangi534@gmail.com
-        </a>
+        <div class="max-w-md mx-auto">
+            <!-- Email direct link -->
+            <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border border-orange-100">
+                <p class="text-gray-500 text-sm mb-1">Email us directly</p>
+                <a href="https://mail.google.com/mail/?view=cm&to=abigaelmwangi534@gmail.com" target="_blank"
+                   class="text-red-700 font-bold text-base hover:underline">
+                    abigaelmwangi534@gmail.com
+                </a>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border border-orange-100">
+                
+                <a href="https://mail.google.com/mail/?view=cm&to=mwangichristine201@gmail.com" target="_blank"
+                   class="text-red-700 font-bold text-base hover:underline">
+                   mwangichristine201@gmail.com
+                </a>
+            </div>
+
+            <!-- Contact Form -->
+            <form class="bg-white rounded-2xl shadow-md p-6 border border-orange-100 text-left space-y-4"
+                  action="https://formspree.io/f/xwvjjwed" method="POST">
+                <div>
+                    <label for="name" class="block font-semibold text-gray-700 mb-1 text-sm">Your Name</label>
+                    <input type="text" id="name" name="Name" required placeholder="e.g. John Kamau"
+                        class="input-field w-full rounded-xl px-4 py-2 text-sm">
+                </div>
+                <div>
+                    <label for="phone" class="block font-semibold text-gray-700 mb-1 text-sm">Phone Number</label>
+                    <input type="tel" id="phone" name="Phone" required placeholder="e.g. 0712345678"
+                        class="input-field w-full rounded-xl px-4 py-2 text-sm">
+                </div>
+                <div>
+                    <label for="message" class="block font-semibold text-gray-700 mb-1 text-sm">Message</label>
+                    <textarea id="message" name="Message" required rows="4" placeholder="Type your message here..."
+                        class="input-field w-full rounded-xl px-4 py-2 text-sm resize-y"></textarea>
+                </div>
+                <button type="submit" id="submit-btn"
+                    class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl cursor-pointer transition shadow-md">
+                    Send Message
+                </button>
+                <p id="form-success" class="hidden text-center text-green-600 font-semibold text-sm">
+                    Message sent successfully! We'll get back to you soon.
+                </p>
+            </form>
         </div>
-
-        <div class="mb-8">
-            <p class="text-black font-semibold mb-1">Email us directly:</p>
-            <a href="https://mail.google.com/mail/?view=cm&to=Mwangichristine201@gmail.com" target="_blank"
-               class="text-blue-700 font-bold text-lg hover:underline">
-               Mwangichristine201@gmail.com
-        </a>
-        </div>
-
-        <!-- Contact Form -->
-        <form class="max-w-md mx-auto text-left space-y-4"
-              action="https://formspree.io/f/xwvjjwed" method="POST">
-            <div>
-                <label for="name" class="block font-semibold text-black mb-1">Your Name:</label>
-                <input type="text" id="name" name="Name" required placeholder="e.g. John Kamau"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="phone" class="block font-semibold text-black mb-1">Phone Number:</label>
-                <input type="tel" id="phone" name="Phone" required placeholder="e.g. 0712345678"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <label for="message" class="block font-semibold text-black mb-1">Message:</label>
-                <textarea id="message" name="Message" required rows="4" placeholder="Type your message here..."
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"></textarea>
-            </div>
-            <button type="submit" id="submit-btn"
-                class="w-full bg-blue-700 hover:bg-blue-900 text-white font-semibold py-2 rounded-lg cursor-pointer transition">
-                Send Message
-            </button>
-            <p id="form-success" class="hidden text-center text-green-600 font-semibold">
-                Message sent successfully! We'll get back to you soon.
-            </p>
-        </form>
     </section>
 
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-black text-white text-center py-6">
-    <p class="mb-3">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
-    <div class="flex justify-center gap-6 text-2xl">
-        <a href="#" class="hover:text-yellow-400 transition"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="hover:text-yellow-400 transition"><i class="fab fa-tiktok"></i></a>
-        <a href="#" class="hover:text-yellow-400 transition"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.me/254113368871" target="_blank" class="hover:text-green-400 transition"><i class="fab fa-whatsapp"></i></a>
+<footer class="hero-bg text-white text-center py-8">
+    <h3 class="text-yellow-400 font-black text-lg tracking-widest mb-1">ARIZONA FAST FOOD</h3>
+    <p class="text-orange-200 text-xs italic mb-4">Nairobi, Kenya</p>
+    <div class="flex justify-center gap-6 text-2xl mb-4">
+        <a href="#" class="text-gray-400 hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="text-gray-400 hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/254113368871" target="_blank" class="text-gray-400 hover:text-green-400 transition"><i class="fab fa-whatsapp"></i></a>
     </div>
+    <p class="text-gray-500 text-xs">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
 <script src="app.js"></script>
 <script>
-    // Contact form — send via Formspree without page reload
     const contactForm = document.querySelector('#contact form');
     contactForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-
         const btn = document.getElementById('submit-btn');
         const success = document.getElementById('form-success');
-
         btn.textContent = 'Sending...';
         btn.disabled = true;
-
         const response = await fetch(contactForm.action, {
             method: 'POST',
             body: new FormData(contactForm),
             headers: { 'Accept': 'application/json' }
         });
-
         if (response.ok) {
             contactForm.reset();
             btn.classList.add('hidden');
