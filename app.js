@@ -31,16 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================
     menuItems.forEach(item => {
         const card = document.createElement("div");
-        card.className = "bg-white rounded-2xl shadow-md p-4 w-52 text-center hover:-translate-y-1 transition-transform duration-200";
+        card.className = "bg-white rounded-2xl shadow-md p-4 w-52 text-center card-hover border border-orange-100";
 
         card.innerHTML = `
             <img src="${item.image}" alt="${item.name}"
                  onerror="this.src='https://via.placeholder.com/200x150?text=${item.name}'"
                  class="w-full h-36 object-cover rounded-xl mb-3">
-            <h3 class="text-black font-bold text-base mb-1">${item.name}</h3>
-            <p class="text-red-600 font-semibold mb-3">Ksh ${item.price}</p>
+            <h3 class="text-gray-900 font-black text-base mb-1">${item.name}</h3>
+            <p class="text-red-700 font-bold mb-3 text-sm">Ksh ${item.price}</p>
             <button id="btn-${item.id}" onclick="toggleCart(${item.id})"
-                class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition">
+                class="w-full bg-red-700 hover:bg-red-800 text-white py-2 rounded-xl font-bold transition text-sm">
                 Add to Cart
             </button>
         `;
@@ -59,11 +59,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (exists) {
             cart = cart.filter(i => i.id !== id);
             btn.textContent = "Add to Cart";
-            btn.className = "w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition";
+            btn.className = "w-full bg-red-700 hover:bg-red-800 text-white py-2 rounded-xl font-bold transition text-sm";
         } else {
             cart.push(item);
             btn.textContent = "Remove from Cart";
-            btn.className = "w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition";
+            btn.className = "w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded-xl font-bold transition text-sm";
         }
 
         updateCart();
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // UPDATE CART
     // =====================
     function updateCart() {
-        cartDiv.innerHTML = `<h2 class="text-xl font-bold text-black text-center mb-4">Your Cart</h2>`;
+        cartDiv.innerHTML = `<h2 class="text-xl font-black text-gray-900 text-center mb-4">Your Cart</h2>`;
 
         if (cart.length === 0) {
             cartDiv.innerHTML += `<p class="text-center text-gray-400 italic">Your cart is empty.</p>`;
