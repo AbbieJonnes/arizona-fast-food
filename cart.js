@@ -195,10 +195,10 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.removeItem("arizona_cart"); // clear cart after payment
             localStorage.removeItem("arizona_order_mode"); // clear order mode for next order
 
-            // Notify staff via Formspree (fire and forget)
-            notifyStaff(orderNo, total);
-
-            window.location.href = "receipt.html";
+            // Notify staff via Formspree, then navigate to receipt
+            notifyStaff(orderNo, total).finally(() => {
+                window.location.href = "receipt.html";
+            });
         }, 2500);
     };
 
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("Items", itemsList);
         formData.append("Total", `Ksh ${total}`);
 
-        fetch("https://formspree.io/f/xwvjjwed", {
+        return fetch("https://formspree.io/f/xwvjjwed", {
             method: "POST",
             body: formData,
             headers: { "Accept": "application/json" }
