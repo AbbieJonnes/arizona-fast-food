@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Arizona Fast Food</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bg { background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%); }
+        .input-field {
+            background: #fff8f0;
+            border: 2px solid #e8c99a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4" style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%);">
+
+<div class="w-full max-w-sm">
+
+    <!-- Logo -->
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-black tracking-widest text-red-700">ARIZONA FAST FOOD</h1>
+        <p class="text-gray-500 text-xs italic mt-1">Sign in to place your order</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-7 border border-orange-100">
+
+        <!-- TOGGLE -->
+        <div class="flex bg-orange-50 rounded-xl p-1 mb-6">
+            <button id="tab-signin" onclick="showTab('signin')"
+                class="flex-1 py-2 rounded-lg font-bold text-sm transition bg-red-700 text-white">
+                Sign In
+            </button>
+            <button id="tab-signup" onclick="showTab('signup')"
+                class="flex-1 py-2 rounded-lg font-bold text-sm transition text-gray-600">
+                Sign Up
+            </button>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <form id="signin-form" class="space-y-4" onsubmit="return handleSignIn(event)">
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1 text-sm">Phone Number</label>
+                <input type="tel" id="signin-phone" required placeholder="0712345678"
+                    class="input-field w-full rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1 text-sm">Password</label>
+                <input type="password" id="signin-password" required placeholder="••••••••"
+                    class="input-field w-full rounded-xl px-4 py-2 text-sm">
+            </div>
+            <p id="signin-error" class="text-red-600 text-xs hidden"></p>
+            <button type="submit"
+                class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl transition shadow-md">
+                Sign In
+            </button>
+        </form>
+
+        <!-- SIGN UP FORM -->
+        <form id="signup-form" class="space-y-4 hidden" onsubmit="return handleSignUp(event)">
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1 text-sm">Full Name</label>
+                <input type="text" id="signup-name" required placeholder="e.g. John Kamau"
+                    class="input-field w-full rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1 text-sm">Phone Number</label>
+                <input type="tel" id="signup-phone" required placeholder="0712345678"
+                    class="input-field w-full rounded-xl px-4 py-2 text-sm">
+            </div>
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1 text-sm">Password</label>
+                <input type="password" id="signup-password" required placeholder="Create a password" minlength="4"
+                    class="input-field w-full rounded-xl px-4 py-2 text-sm">
+            </div>
+            <p id="signup-error" class="text-red-600 text-xs hidden"></p>
+            <button type="submit"
+                class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl transition shadow-md">
+                Create Account
+            </button>
+        </form>
+
+    </div>
+
+    <p class="text-center text-gray-500 text-xs mt-6">
+        <a href="index.html" class="hover:text-red-700 transition">&larr; Back to Home</a>
+    </p>
+
+</div>
+
+<script>
+    // ── TAB SWITCHING ──
+    function showTab(tab) {
+        const signinForm = document.getElementById('signin-form');
+        const signupForm = document.getElementById('signup-form');
+        const tabSignin = document.getElementById('tab-signin');
+        const tabSignup = document.getElementById('tab-signup');
+
+        if (tab === 'signin') {
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            tabSignin.classList.add('bg-red-700', 'text-white');
+            tabSignin.classList.remove('text-gray-600');
+            tabSignup.classList.remove('bg-red-700', 'text-white');
+            tabSignup.classList.add('text-gray-600');
+        } else {
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+            tabSignup.classList.add('bg-red-700', 'text-white');
+            tabSignup.classList.remove('text-gray-600');
+            tabSignin.classList.remove('bg-red-700', 'text-white');
+            tabSignin.classList.add('text-gray-600');
+        }
+    }
+
+    // If redirected here wanting to sign up directly
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'signup') showTab('signup');
+
+    // ── HELPERS ──
+    function getUsers() {
+        return JSON.parse(localStorage.getItem('arizona_users') || '[]');
+    }
+    function saveUsers(users) {
+        localStorage.setItem('arizona_users', JSON.stringify(users));
+    }
+    function redirectAfterLogin() {
+        // Go back to where they wanted to go (menu) or home
+        const redirectTo = sessionStorage.getItem('redirect_after_login') || 'menu.html';
+        sessionStorage.removeItem('redirect_after_login');
+        window.location.href = redirectTo;
+    }
+
+    // ── SIGN UP ──
+    function handleSignUp(e) {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value.trim();
+        const phone = document.getElementById('signup-phone').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const errorEl = document.getElementById('signup-error');
+
+        const users = getUsers();
+        if (users.find(u => u.phone === phone)) {
+            errorEl.textContent = 'An account with this phone number already exists. Please sign in.';
+            errorEl.classList.remove('hidden');
+            return false;
+        }
+
+        users.push({ name, phone, password });
+        saveUsers(users);
+
+        // Auto-login after signup
+        localStorage.setItem('arizona_current_user', JSON.stringify({ name, phone }));
+        redirectAfterLogin();
+        return false;
+    }
+
+    // ── SIGN IN ──
+    function handleSignIn(e) {
+        e.preventDefault();
+        const phone = document.getElementById('signin-phone').value.trim();
+        const password = document.getElementById('signin-password').value;
+        const errorEl = document.getElementById('signin-error');
+
+        const users = getUsers();
+        const user = users.find(u => u.phone === phone && u.password === password);
+
+        if (!user) {
+            errorEl.textContent = 'Incorrect phone number or password.';
+            errorEl.classList.remove('hidden');
+            return false;
+        }
+
+        localStorage.setItem('arizona_current_user', JSON.stringify({ name: user.name, phone: user.phone }));
+        redirectAfterLogin();
+        return false;
+    }
+</script>
+
+</body>
+</html>
