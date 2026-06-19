@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Arizona Fast Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bg { background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%); }
+        .option-card { transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: pointer; }
+        .option-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(192,57,43,0.25); }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4" style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%);">
+
+<div class="w-full max-w-2xl text-center">
+
+    <!-- Logo -->
+    <h1 class="text-2xl font-black tracking-widest text-red-700 mb-1">ARIZONA FAST FOOD</h1>
+    <p id="welcome-msg" class="text-gray-600 text-lg mb-10"></p>
+
+    <p class="text-gray-500 text-sm uppercase tracking-widest font-semibold mb-6">How would you like to order?</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- DINE IN -->
+        <div onclick="chooseDineIn()" class="option-card bg-white rounded-2xl shadow-md p-8 border border-orange-100">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-utensils text-2xl text-red-700"></i>
+            </div>
+            <h3 class="font-black text-gray-900 text-lg mb-2">Dine-In</h3>
+            <p class="text-gray-500 text-sm">I'm at a table in the restaurant. I'll enter my table number.</p>
+        </div>
+
+        <!-- DELIVERY -->
+        <div onclick="chooseDelivery()" class="option-card bg-white rounded-2xl shadow-md p-8 border border-orange-100">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-motorcycle text-2xl text-red-700"></i>
+            </div>
+            <h3 class="font-black text-gray-900 text-lg mb-2">Delivery</h3>
+            <p class="text-gray-500 text-sm">I'm ordering online. Deliver my food to my address.</p>
+        </div>
+
+    </div>
+
+    <p class="text-center text-gray-400 text-xs mt-10">
+        <a href="index.html" class="hover:text-red-700 transition">&larr; Back to Home</a>
+    </p>
+
+</div>
+
+<script>
+    // Require login
+    const currentUser = JSON.parse(localStorage.getItem('arizona_current_user') || 'null');
+    if (!currentUser) {
+        sessionStorage.setItem('redirect_after_login', 'welcome.html');
+        window.location.href = 'login.html';
+    } else {
+        document.getElementById('welcome-msg').textContent = `Welcome, ${currentUser.name}! 👋`;
+
+        // Show a note if a table was scanned via QR code
+        const scannedTable = sessionStorage.getItem('scanned_table');
+        if (scannedTable) {
+            const note = document.createElement('p');
+            note.className = 'text-green-600 text-sm font-semibold -mt-8 mb-8';
+            note.textContent = `📍 You scanned Table ${scannedTable}`;
+            document.getElementById('welcome-msg').after(note);
+        }
+    }
+
+    function chooseDineIn() {
+        const scannedTable = sessionStorage.getItem('scanned_table');
+
+        if (scannedTable) {
+            // Skip manual entry — table number already known from QR scan
+            localStorage.setItem('arizona_order_mode', JSON.stringify({ type: 'dinein', tableNumber: scannedTable }));
+            window.location.href = 'menu.html';
+        } else {
+            localStorage.setItem('arizona_order_mode', JSON.stringify({ type: 'dinein' }));
+            window.location.href = 'table.html';
+        }
+    }
+
+    function chooseDelivery() {
+        window.location.href = 'delivery.html';
+    }
+</script>
+<script src="chatbot.js"></script>
+
+</body>
+</html>
