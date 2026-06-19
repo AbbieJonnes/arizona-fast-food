@@ -5,46 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt - Arizona Fast Food</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- QR Code library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .hero-bg { background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%); }
+    </style>
 </head>
 
-<body class="bg-cyan-300 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%);">
 
 <!-- HEADER -->
-<header class="bg-black text-white text-center py-6 px-4 shadow-lg">
-    <h1 class="text-3xl font-bold tracking-widest">ARIZONA FAST FOOD</h1>
+<header class="hero-bg text-white text-center py-6 px-4 shadow-2xl">
+    <h1 class="text-3xl font-black tracking-widest text-yellow-400">ARIZONA FAST FOOD</h1>
 </header>
 
 <main class="flex-1 flex items-center justify-center px-4 py-12">
 
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md border border-orange-100">
 
         <!-- Title -->
-        <h2 class="text-2xl font-bold text-center text-black mb-1">Payment Receipt</h2>
-        <p class="text-center text-green-600 font-semibold mb-6">Order Confirmed!</p>
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span class="text-green-600 text-2xl">✓</span>
+            </div>
+            <h2 class="text-2xl font-black text-gray-900 mb-1">Payment Receipt</h2>
+            <p class="text-green-600 font-semibold text-sm">Order Confirmed!</p>
+        </div>
 
         <!-- Order Info -->
-        <div class="border-t border-dashed border-gray-300 pt-4 mb-4 space-y-1 text-sm text-gray-600">
+        <div class="border-t border-dashed border-orange-200 pt-4 mb-4 space-y-1 text-sm text-gray-600">
             <div class="flex justify-between">
-                <span class="font-semibold text-black">Order No:</span>
+                <span class="font-semibold text-gray-900">Order No:</span>
                 <span id="receipt-order-no" class="font-mono"></span>
             </div>
             <div class="flex justify-between">
-                <span class="font-semibold text-black">Date:</span>
+                <span class="font-semibold text-gray-900">Customer:</span>
+                <span id="receipt-customer"></span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-900">Date:</span>
                 <span id="receipt-date"></span>
             </div>
             <div class="flex justify-between">
-                <span class="font-semibold text-black">Time:</span>
+                <span class="font-semibold text-gray-900">Time:</span>
                 <span id="receipt-time"></span>
             </div>
         </div>
 
         <!-- Items -->
-        <div id="receipt-items" class="border-t border-dashed border-gray-300 pt-4 mb-4 space-y-2"></div>
+        <div id="receipt-items" class="border-t border-dashed border-orange-200 pt-4 mb-4 space-y-2"></div>
 
         <!-- Total -->
-        <div class="border-t border-gray-300 pt-4 flex justify-between font-bold text-red-600 text-lg mb-6">
+        <div class="border-t border-orange-200 pt-4 flex justify-between font-black text-red-700 text-lg mb-6">
             <span>TOTAL</span>
             <span id="receipt-total"></span>
         </div>
@@ -52,7 +63,7 @@
         <!-- QR Code -->
         <div class="flex flex-col items-center mb-6">
             <p class="text-sm text-gray-500 mb-3">Scan QR code at the counter</p>
-            <div id="qr-code" class="border-2 border-gray-200 rounded-xl p-2"></div>
+            <div id="qr-code" class="border-2 border-orange-100 rounded-xl p-2"></div>
         </div>
 
         <!-- Thank you -->
@@ -60,8 +71,8 @@
 
         <!-- Back button -->
         <a href="menu.html"
-           class="block text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-3 rounded-xl transition">
-            Back to Menu
+           class="block text-center bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl transition shadow-md">
+            Order Again
         </a>
 
     </div>
@@ -69,42 +80,37 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-black text-white text-center py-4">
-    <p>&copy; 2026 Arizona Fast Food. All rights reserved.</p>
+<footer class="hero-bg text-white text-center py-4">
+    <p class="text-gray-400 text-xs">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
 <script>
-    // Load order from localStorage
     const order = JSON.parse(localStorage.getItem("arizona_order"));
+    const currentUser = JSON.parse(localStorage.getItem("arizona_current_user") || "null");
 
     if (!order) {
-        // Nothing to show — redirect back
         window.location.href = "menu.html";
     } else {
         const now = new Date();
 
-        // Order number
         document.getElementById("receipt-order-no").textContent = order.orderNo;
-
-        // Date & time
+        document.getElementById("receipt-customer").textContent = currentUser ? currentUser.name : "Guest";
         document.getElementById("receipt-date").textContent = now.toLocaleDateString();
         document.getElementById("receipt-time").textContent = now.toLocaleTimeString();
 
-        // Items
         const itemsDiv = document.getElementById("receipt-items");
         order.cart.forEach(item => {
+            const qty = item.qty || 1;
             itemsDiv.innerHTML += `
-                <div class="flex justify-between text-black text-sm">
-                    <span>${item.name}</span>
-                    <span>Ksh ${item.price}</span>
+                <div class="flex justify-between text-gray-900 text-sm">
+                    <span>${item.name} ${qty > 1 ? `x${qty}` : ""}</span>
+                    <span>Ksh ${item.price * qty}</span>
                 </div>
             `;
         });
 
-        // Total
         document.getElementById("receipt-total").textContent = `Ksh ${order.total}`;
 
-        // QR Code data string
         const qrData = `ARIZONA FAST FOOD | Order: ${order.orderNo} | Total: Ksh ${order.total} | Date: ${now.toLocaleDateString()} | Time: ${now.toLocaleTimeString()}`;
 
         new QRCode(document.getElementById("qr-code"), {
@@ -115,7 +121,6 @@
             colorLight: "#ffffff"
         });
 
-        // Clear order from storage after displaying
         localStorage.removeItem("arizona_order");
     }
 </script>
