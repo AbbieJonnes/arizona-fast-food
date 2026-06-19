@@ -5,6 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!menuDiv) return;
 
     // =====================
+    // REQUIRE LOGIN TO ORDER
+    // =====================
+    const currentUser = JSON.parse(localStorage.getItem("arizona_current_user") || "null");
+    if (!currentUser) {
+        sessionStorage.setItem("redirect_after_login", "menu.html");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // =====================
     // MENU ITEMS
     // =====================
     const menuItems = [
@@ -17,14 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     // =====================
-    // CART STATE
+    // CART STATE (loaded from localStorage so it persists across pages)
     // =====================
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem("arizona_cart") || "[]");
 
-    const cartDiv      = document.getElementById("cart");
-    const summaryDiv   = document.getElementById("order-summary");
-    const summaryLines = document.getElementById("summary-lines");
-    const summaryTotal = document.getElementById("summary-total");
+    function saveCart() {
+        localStorage.setItem("arizona_cart", JSON.stringify(cart));
+    }
 
     // =====================
     // BUILD MENU CARDS
@@ -39,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  class="w-full h-36 object-cover rounded-xl mb-3">
             <h3 class="text-gray-900 font-black text-base mb-1">${item.name}</h3>
             <p class="text-red-700 font-bold mb-3 text-sm">Ksh ${item.price}</p>
-            <button id="btn-${item.id}" onclick="toggleCart(${item.id})"
+            <button onclick="addToCart(${item.id})"
                 class="w-full bg-red-700 hover:bg-red-800 text-white py-2 rounded-xl font-bold transition text-sm">
                 Add to Cart
             </button>
@@ -49,149 +58,47 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================
-    // TOGGLE CART
+    // ADD TO CART (supports multiple quantities)
     // =====================
-    window.toggleCart = function (id) {
-        const item   = menuItems.find(i => i.id === id);
-        const exists = cart.find(i => i.id === id);
-        const btn    = document.getElementById(`btn-${id}`);
+    window.addToCart = function (id) {
+        const item = menuItems.find(i => i.id === id);
+        const existing = cart.find(i => i.id === id);
 
-        if (exists) {
-            cart = cart.filter(i => i.id !== id);
-            btn.textContent = "Add to Cart";
-            btn.className = "w-full bg-red-700 hover:bg-red-800 text-white py-2 rounded-xl font-bold transition text-sm";
+        if (existing) {
+            existing.qty += 1;
         } else {
-            cart.push(item);
-            btn.textContent = "Remove from Cart";
-            btn.className = "w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded-xl font-bold transition text-sm";
+            cart.push({ ...item, qty: 1 });
         }
 
-        updateCart();
+        saveCart();
+        showAddedToast(item.name);
     };
 
     // =====================
-    // UPDATE CART
+    // SMALL "ADDED TO CART" FEEDBACK
     // =====================
-    function updateCart() {
-        cartDiv.innerHTML = `<h2 class="text-xl font-black text-gray-900 text-center mb-4">Your Cart</h2>`;
-
-        if (cart.length === 0) {
-            cartDiv.innerHTML += `<p class="text-center text-gray-400 italic">Your cart is empty.</p>`;
-            summaryDiv.classList.add("hidden");
-            return;
+    function showAddedToast(name) {
+        let toast = document.getElementById("added-toast");
+        if (!toast) {
+            toast = document.createElement("div");
+            toast.id = "added-toast";
+            toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-5 py-3 rounded-xl shadow-lg z-50 text-sm font-semibold transition-opacity duration-300";
+            document.body.appendChild(toast);
         }
-
-        cart.forEach(item => {
-            cartDiv.innerHTML += `
-                <div class="flex justify-between items-center py-2 border-b border-gray-100 text-black">
-                    <span>${item.name}</span>
-                    <span class="font-semibold">Ksh ${item.price}</span>
-                </div>
-            `;
-        });
-
-        updateSummary();
+        toast.textContent = `${name} added to cart!`;
+        toast.style.opacity = "1";
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(() => {
+            toast.style.opacity = "0";
+        }, 1500);
     }
 
     // =====================
-    // UPDATE ORDER SUMMARY
+    // LOGOUT
     // =====================
-    function updateSummary() {
-        const total = calculateTotal();
-
-        summaryDiv.classList.remove("hidden");
-        summaryLines.innerHTML = "";
-
-        cart.forEach(item => {
-            summaryLines.innerHTML += `
-                <div class="flex justify-between py-2 border-b border-dashed border-gray-200 text-black text-sm">
-                    <span>${item.name}</span>
-                    <span>Ksh ${item.price}</span>
-                </div>
-            `;
-        });
-
-        summaryTotal.innerHTML = `
-            <span>TOTAL (${cart.length} item${cart.length > 1 ? "s" : ""})</span>
-            <span>Ksh ${total}</span>
-        `;
-    }
-
-    // =====================
-    // PAY NOW → OPEN M-PESA MODAL
-    // =====================
-    window.goToReceipt = function () {
-        if (cart.length === 0) {
-            alert("Your cart is empty! Add items first.");
-            return;
-        }
-
-        const total = calculateTotal();
-
-        // Show amount in modal
-        document.getElementById("mpesa-amount").textContent = `Ksh ${total}`;
-
-        // Reset modal state
-        document.getElementById("mpesa-pin").value = "";
-        document.getElementById("pin-error").classList.add("hidden");
-        document.getElementById("mpesa-processing").classList.add("hidden");
-        document.getElementById("mpesa-buttons").classList.remove("hidden");
-        document.getElementById("mpesa-pin").classList.remove("hidden");
-
-        // Show modal
-        document.getElementById("mpesa-modal").classList.remove("hidden");
+    window.logout = function () {
+        localStorage.removeItem("arizona_current_user");
+        window.location.href = "index.html";
     };
-
-    // =====================
-    // CONFIRM M-PESA PIN
-    // =====================
-    window.confirmMpesa = function () {
-        const pin = document.getElementById("mpesa-pin").value;
-
-        if (pin.length < 4) {
-            document.getElementById("pin-error").textContent = "Please enter your 4-digit PIN.";
-            document.getElementById("pin-error").classList.remove("hidden");
-            return;
-        }
-
-        // Hide buttons and PIN, show spinner
-        document.getElementById("mpesa-buttons").classList.add("hidden");
-        document.getElementById("mpesa-pin").classList.add("hidden");
-        document.getElementById("pin-error").classList.add("hidden");
-        document.getElementById("mpesa-processing").classList.remove("hidden");
-
-        // Simulate processing delay then go to receipt
-        setTimeout(() => {
-            const orderNo = "AFF-" + Date.now().toString().slice(-6);
-            const total   = calculateTotal();
-
-            localStorage.setItem("arizona_order", JSON.stringify({
-                orderNo,
-                cart,
-                total
-            }));
-
-            window.location.href = "receipt.html";
-        }, 2500);
-    };
-
-    // =====================
-    // CANCEL M-PESA MODAL
-    // =====================
-    window.cancelMpesa = function () {
-        document.getElementById("mpesa-modal").classList.add("hidden");
-    };
-
-    // =====================
-    // UTILITY
-    // =====================
-    window.calculateTotal = function () {
-        return cart.reduce((sum, item) => sum + item.price, 0);
-    };
-
-    // Internal alias (same function)
-    function calculateTotal() {
-        return cart.reduce((sum, item) => sum + item.price, 0);
-    }
 
 });
