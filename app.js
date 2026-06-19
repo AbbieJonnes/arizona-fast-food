@@ -15,6 +15,30 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================
+    // REQUIRE ORDER MODE (Dine-in / Delivery)
+    // =====================
+    const orderMode = JSON.parse(localStorage.getItem("arizona_order_mode") || "null");
+    if (!orderMode || !orderMode.type) {
+        window.location.href = "welcome.html";
+        return;
+    }
+
+    // Show order type badge at top of menu
+    const badge = document.createElement("div");
+    badge.className = "text-center mb-6";
+    if (orderMode.type === "dinein") {
+        badge.innerHTML = `<span class="inline-block bg-red-50 text-red-700 font-bold text-sm px-4 py-2 rounded-full border border-red-100">
+            <i class="fas fa-chair"></i> Dine-in &middot; Table ${orderMode.tableNumber}
+        </span>`;
+    } else {
+        badge.innerHTML = `<span class="inline-block bg-red-50 text-red-700 font-bold text-sm px-4 py-2 rounded-full border border-red-100">
+            <i class="fas fa-motorcycle"></i> Delivery &middot; Fee: Ksh ${orderMode.deliveryFee}
+        </span>`;
+    }
+    const menuHeading = document.querySelector("main > div.text-center");
+    if (menuHeading) menuHeading.after(badge);
+
+    // =====================
     // MENU ITEMS
     // =====================
     const menuItems = [
@@ -22,8 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
         { id: 2, name: "Fries",            price: 150, image: "assets/images/fries.jpg" },
         { id: 3, name: "Pizza",            price: 500, image: "assets/images/pizza.jpg" },
         { id: 4, name: "Soda",             price: 100, image: "assets/images/soda.jpg" },
-        { id: 5, name: "Chicken Sandwich", price: 300, image: "assets/images/chicken sandwich.jpg" },
-        { id: 6, name: "Ice Cream",        price: 200, image: "assets/images/ice cream.jpg" }
+        { id: 5, name: "Chicken Sandwich", price: 300, image: "assets/images/sandwich.jpg" },
+        { id: 6, name: "Ice Cream",        price: 200, image: "assets/images/icecream.jpg" }
     ];
 
     // =====================
@@ -98,6 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================
     window.logout = function () {
         localStorage.removeItem("arizona_current_user");
+        localStorage.removeItem("arizona_order_mode");
+        localStorage.removeItem("arizona_cart");
         window.location.href = "index.html";
     };
 
