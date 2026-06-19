@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Address - Arizona Fast Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bg { background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%); }
+        .input-field {
+            background: #fff8f0; border: 2px solid #e8c99a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none; border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+        }
+        /* Fake map styling */
+        .fake-map {
+            background:
+                linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)),
+                repeating-linear-gradient(0deg, #cde8d4, #cde8d4 18px, #b8dcc1 18px, #b8dcc1 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 38px, #a9d4b4 38px, #a9d4b4 40px);
+            position: relative;
+            overflow: hidden;
+        }
+        .map-road {
+            position: absolute; background: #fff; box-shadow: 0 0 0 1px #ddd;
+        }
+        .map-pin {
+            position: absolute; transform: translate(-50%, -100%);
+            animation: drop 0.4s ease;
+        }
+        @keyframes drop {
+            from { transform: translate(-50%, -160%); opacity: 0; }
+            to { transform: translate(-50%, -100%); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%); min-height: 100vh;">
+
+<!-- HEADER -->
+<header class="hero-bg text-white text-center py-5 px-4 shadow-2xl">
+    <h1 class="text-2xl font-black tracking-widest text-yellow-400">ARIZONA FAST FOOD</h1>
+    <p class="text-orange-200 text-xs italic mt-1">Delivery Order</p>
+</header>
+
+<main class="max-w-md mx-auto px-4 py-10">
+
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-black text-gray-900 mb-1">Where should we deliver?</h2>
+        <p class="text-gray-500 text-sm">Enter your address or drop a pin on the map.</p>
+    </div>
+
+    <!-- Address input -->
+    <div class="bg-white rounded-2xl shadow-md p-5 border border-orange-100 mb-4">
+        <label class="block font-semibold text-gray-700 mb-2 text-sm">Delivery Address</label>
+        <input id="address-input" type="text" placeholder="e.g. Kilimani, Argwings Kodhek Rd"
+            class="input-field w-full rounded-xl px-4 py-2 text-sm mb-3">
+
+        <label class="block font-semibold text-gray-700 mb-2 text-sm">Phone Number</label>
+        <input id="delivery-phone" type="tel" placeholder="e.g. 0712345678"
+            class="input-field w-full rounded-xl px-4 py-2 text-sm">
+    </div>
+
+    <!-- FAKE MAP -->
+    <div class="bg-white rounded-2xl shadow-md p-3 border border-orange-100 mb-4">
+        <p class="text-xs text-gray-400 mb-2 text-center italic">Tap anywhere on the map to drop a pin</p>
+        <div id="fake-map" class="fake-map w-full h-56 rounded-xl cursor-crosshair">
+            <!-- decorative roads -->
+            <div class="map-road" style="top: 40%; left: 0; width: 100%; height: 6px;"></div>
+            <div class="map-road" style="top: 0; left: 60%; width: 6px; height: 100%;"></div>
+            <div class="map-road" style="top: 70%; left: 0; width: 100%; height: 4px;"></div>
+
+            <!-- restaurant marker (fixed) -->
+            <div class="absolute" style="top: 40%; left: 25%; transform: translate(-50%,-50%);">
+                <i class="fas fa-store text-red-700 text-lg"></i>
+            </div>
+        </div>
+        <p id="distance-note" class="text-xs text-gray-400 text-center mt-2 hidden">
+            📍 Pin dropped — calculating delivery fee...
+        </p>
+    </div>
+
+    <!-- Delivery fee -->
+    <div id="fee-box" class="bg-white rounded-2xl shadow-md p-5 border border-orange-100 mb-6 hidden">
+        <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-semibold text-sm">Delivery Fee</span>
+            <span id="fee-amount" class="font-black text-red-700 text-lg"></span>
+        </div>
+    </div>
+
+    <button id="continue-btn" onclick="continueToMenu()" disabled
+        class="w-full bg-gray-300 text-gray-500 font-black py-3 rounded-xl transition text-lg cursor-not-allowed">
+        Drop a pin or enter address to continue
+    </button>
+
+    <p class="text-center text-gray-400 text-xs mt-6">
+        <a href="welcome.html" class="hover:text-red-700 transition">&larr; Back</a>
+    </p>
+
+</main>
+
+<script>
+    let deliveryFee = 0;
+    let pinDropped = false;
+
+    const map = document.getElementById('fake-map');
+    const distanceNote = document.getElementById('distance-note');
+    const feeBox = document.getElementById('fee-box');
+    const feeAmount = document.getElementById('fee-amount');
+    const continueBtn = document.getElementById('continue-btn');
+    const addressInput = document.getElementById('address-input');
+
+    map.addEventListener('click', (e) => {
+        // Remove old pin
+        const oldPin = document.getElementById('user-pin');
+        if (oldPin) oldPin.remove();
+
+        const rect = map.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const pin = document.createElement('div');
+        pin.id = 'user-pin';
+        pin.className = 'map-pin';
+        pin.style.left = x + 'px';
+        pin.style.top = y + 'px';
+        pin.innerHTML = '<i class="fas fa-map-marker-alt text-red-700 text-3xl drop-shadow"></i>';
+        map.appendChild(pin);
+
+        pinDropped = true;
+        distanceNote.classList.remove('hidden');
+
+        // Simulate calculating delivery fee based on distance from restaurant marker (25%, 40%)
+        const restaurantX = rect.width * 0.25;
+        const restaurantY = rect.height * 0.40;
+        const dist = Math.sqrt((x - restaurantX) ** 2 + (y - restaurantY) ** 2);
+
+        // Simple formula: base fee + distance-based fee, capped
+        deliveryFee = Math.min(500, Math.round(100 + dist * 1.2));
+
+        setTimeout(() => {
+            distanceNote.textContent = `📍 Pin dropped — approx. ${(dist / 20).toFixed(1)} km away`;
+            feeBox.classList.remove('hidden');
+            feeAmount.textContent = `Ksh ${deliveryFee}`;
+            enableContinue();
+        }, 600);
+    });
+
+    addressInput.addEventListener('input', () => {
+        if (addressInput.value.trim().length > 4 && !pinDropped) {
+            // If they typed an address without dropping a pin, use a default flat fee
+            deliveryFee = 150;
+            feeBox.classList.remove('hidden');
+            feeAmount.textContent = `Ksh ${deliveryFee}`;
+            enableContinue();
+        }
+    });
+
+    function enableContinue() {
+        continueBtn.disabled = false;
+        continueBtn.textContent = 'Continue to Menu';
+        continueBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+        continueBtn.classList.add('bg-red-700', 'hover:bg-red-800', 'text-white', 'shadow-md');
+    }
+
+    function continueToMenu() {
+        const address = addressInput.value.trim() || 'Pin dropped on map';
+        const phone = document.getElementById('delivery-phone').value.trim();
+
+        if (!phone) {
+            alert('Please enter your phone number for delivery updates.');
+            return;
+        }
+
+        const orderMode = {
+            type: 'delivery',
+            address: address,
+            phone: phone,
+            deliveryFee: deliveryFee
+        };
+
+        localStorage.setItem('arizona_order_mode', JSON.stringify(orderMode));
+        window.location.href = 'menu.html';
+    }
+</script>
+<script src="chatbot.js"></script>
+
+</body>
+</html>
