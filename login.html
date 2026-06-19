@@ -133,7 +133,7 @@
     }
     function redirectAfterLogin() {
         // Go back to where they wanted to go (menu) or home
-        const redirectTo = sessionStorage.getItem('redirect_after_login') || 'menu.html';
+        const redirectTo = sessionStorage.getItem('redirect_after_login') || 'welcome.html';
         sessionStorage.removeItem('redirect_after_login');
         window.location.href = redirectTo;
     }
@@ -184,5 +184,6 @@
     }
 </script>
 <script src="chatbot.js"></script>
+
 </body>
 </html>
