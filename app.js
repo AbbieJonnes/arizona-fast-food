@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
         { id: 2, name: "Fries",            price: 150, image: "assets/images/fries.jpg" },
         { id: 3, name: "Pizza",            price: 500, image: "assets/images/pizza.jpg" },
         { id: 4, name: "Soda",             price: 100, image: "assets/images/soda.jpg" },
-        { id: 5, name: "Chicken Sandwich", price: 300, image: "assets/images/sandwich.jpg" },
-        { id: 6, name: "Ice Cream",        price: 200, image: "assets/images/icecream.jpg" }
+        { id: 5, name: "Chicken Sandwich", price: 300, image: "assets/images/chicken sandwich.jpg" },
+        { id: 6, name: "Ice Cream",        price: 200, image: "assets/images/ice cream.jpg" }
     ];
 
     // =====================
