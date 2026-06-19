@@ -11,9 +11,12 @@
 
     const pageContext = {
         "index.html": "The customer is on the Home page. You can tell them about Arizona Fast Food's story, services (Dine-in, Takeout, Delivery, Catering), location, opening hours, and how to contact or order.",
+        "welcome.html": "The customer just logged in and is choosing between Dine-in or Delivery ordering.",
+        "table.html": "The customer is entering their table number for a dine-in order.",
+        "delivery.html": "The customer is entering their delivery address and seeing the delivery fee before ordering.",
         "menu.html": "The customer is on the Menu page. Help them with menu items: Burger (Ksh 250), Fries (Ksh 150), Pizza (Ksh 500), Soda (Ksh 100), Chicken Sandwich (Ksh 300), Ice Cream (Ksh 200). You can describe what's likely in each, suggest combos, and explain how to add items to cart.",
         "cart.html": "The customer is on the Cart page reviewing their order before paying. Help with questions about checkout, M-Pesa payment, changing quantities, or removing items.",
-        "receipt.html": "The customer just completed an order and is viewing their receipt with a QR code. Help with questions about their order, pickup, or what to do next.",
+        "receipt.html": "The customer just completed an order and is viewing their receipt with a QR code. Help with questions about their order, pickup, delivery, or what to do next.",
         "login.html": "The customer is on the Sign In / Sign Up page. Help with account creation or login issues.",
     };
 
