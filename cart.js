@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // =====================
-    // GO TO PAYMENT (M-Pesa modal)
+    // GO TO PAYMENT (show method choice first)
     // =====================
     window.goToPayment = function () {
         if (cart.length === 0) {
@@ -154,13 +154,38 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const total = calculateTotal();
-        document.getElementById("mpesa-amount").textContent = `Ksh ${total}`;
-        document.getElementById("mpesa-pin").value = "";
-        document.getElementById("pin-error").classList.add("hidden");
-        document.getElementById("mpesa-processing").classList.add("hidden");
-        document.getElementById("mpesa-buttons").classList.remove("hidden");
-        document.getElementById("mpesa-pin").classList.remove("hidden");
-        document.getElementById("mpesa-modal").classList.remove("hidden");
+        document.getElementById("payment-amount-preview").textContent = `Ksh ${total}`;
+        document.getElementById("payment-method-modal").classList.remove("hidden");
+    };
+
+    window.cancelPaymentMethod = function () {
+        document.getElementById("payment-method-modal").classList.add("hidden");
+    };
+
+    window.selectPaymentMethod = function (method) {
+        document.getElementById("payment-method-modal").classList.add("hidden");
+        const total = calculateTotal();
+
+        if (method === "mpesa") {
+            document.getElementById("mpesa-amount").textContent = `Ksh ${total}`;
+            document.getElementById("mpesa-pin").value = "";
+            document.getElementById("pin-error").classList.add("hidden");
+            document.getElementById("mpesa-processing").classList.add("hidden");
+            document.getElementById("mpesa-buttons").classList.remove("hidden");
+            document.getElementById("mpesa-pin").classList.remove("hidden");
+            document.getElementById("mpesa-modal").classList.remove("hidden");
+        } else {
+            document.getElementById("cash-amount").textContent = `Ksh ${total}`;
+            document.getElementById("cash-modal").classList.remove("hidden");
+        }
+    };
+
+    window.cancelCash = function () {
+        document.getElementById("cash-modal").classList.add("hidden");
+    };
+
+    window.confirmCash = function () {
+        completeOrder("Cash");
     };
 
     window.confirmMpesa = function () {
@@ -178,34 +203,64 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("mpesa-processing").classList.remove("hidden");
 
         setTimeout(() => {
-            const orderNo = "AFF-" + Date.now().toString().slice(-6);
-            const subtotal = calculateSubtotal();
-            const total = calculateTotal();
-
-            const orderData = {
-                orderNo,
-                cart,
-                subtotal,
-                deliveryFee,
-                total,
-                orderMode
-            };
-
-            localStorage.setItem("arizona_order", JSON.stringify(orderData));
-            localStorage.removeItem("arizona_cart"); // clear cart after payment
-            localStorage.removeItem("arizona_order_mode"); // clear order mode for next order
-
-            // Notify staff via Formspree, then navigate to receipt
-            notifyStaff(orderNo, total).finally(() => {
-                window.location.href = "receipt.html";
-            });
+            completeOrder("M-Pesa");
         }, 2500);
     };
+
+    window.cancelMpesa = function () {
+        document.getElementById("mpesa-modal").classList.add("hidden");
+    };
+
+    // =====================
+    // COMPLETE ORDER (shared by both Cash and M-Pesa)
+    // =====================
+    function completeOrder(paymentMethod) {
+        const orderNo = "AFF-" + Date.now().toString().slice(-6);
+        const subtotal = calculateSubtotal();
+        const total = calculateTotal();
+
+        const orderData = {
+            orderNo,
+            cart,
+            subtotal,
+            deliveryFee,
+            total,
+            orderMode,
+            paymentMethod
+        };
+
+        localStorage.setItem("arizona_order", JSON.stringify(orderData));
+
+        // Save to permanent order history for admin dashboard
+        saveToOrderHistory(orderData);
+
+        localStorage.removeItem("arizona_cart"); // clear cart after payment
+        localStorage.removeItem("arizona_order_mode"); // clear order mode for next order
+
+        // Notify staff via Formspree, then navigate to receipt
+        notifyStaff(orderNo, total, paymentMethod).finally(() => {
+            window.location.href = "receipt.html";
+        });
+    }
+
+    // =====================
+    // SAVE ORDER TO HISTORY (for admin dashboard)
+    // =====================
+    function saveToOrderHistory(orderData) {
+        const history = JSON.parse(localStorage.getItem("arizona_order_history") || "[]");
+        history.unshift({
+            ...orderData,
+            customerName: currentUser.name,
+            customerPhone: currentUser.phone,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem("arizona_order_history", JSON.stringify(history));
+    }
 
     // =====================
     // NOTIFY STAFF OF NEW ORDER
     // =====================
-    function notifyStaff(orderNo, total) {
+    function notifyStaff(orderNo, total, paymentMethod) {
         const itemsList = cart.map(i => `${i.name} x${i.qty} (Ksh ${i.price * i.qty})`).join(", ");
         const orderTypeText = orderMode.type === "dinein"
             ? `Dine-in - Table ${orderMode.tableNumber}`
@@ -216,6 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("Customer", currentUser.name);
         formData.append("Customer Phone", currentUser.phone);
         formData.append("Order Type", orderTypeText);
+        formData.append("Payment Method", paymentMethod);
         formData.append("Items", itemsList);
         formData.append("Total", `Ksh ${total}`);
 
@@ -228,10 +284,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Staff notification failed to send.");
         });
     }
-
-    window.cancelMpesa = function () {
-        document.getElementById("mpesa-modal").classList.add("hidden");
-    };
 
     // Initial render
     renderCart();
