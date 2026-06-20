@@ -80,7 +80,7 @@
             </div>
         </div>
         <p id="distance-note" class="text-xs text-gray-400 text-center mt-2 hidden">
-            📍 Pin dropped — calculating delivery fee...
+            <i class="fa-solid fa-location-pin"></i> Pin dropped — calculating delivery fee...
         </p>
     </div>
 
@@ -143,7 +143,7 @@
         deliveryFee = Math.min(500, Math.round(100 + dist * 1.2));
 
         setTimeout(() => {
-            distanceNote.textContent = `📍 Pin dropped — approx. ${(dist / 20).toFixed(1)} km away`;
+            distanceNote.textContent = `<i class="fa-solid fa-location-pin"></i> Pin dropped — approx. ${(dist / 20).toFixed(1)} km away`;
             feeBox.classList.remove('hidden');
             feeAmount.textContent = `Ksh ${deliveryFee}`;
             enableContinue();
