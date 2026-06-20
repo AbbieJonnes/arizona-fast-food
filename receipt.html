@@ -56,6 +56,10 @@
                 <span class="font-semibold text-gray-900">Order Type:</span>
                 <span id="receipt-order-type"></span>
             </div>
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-900">Payment:</span>
+                <span id="receipt-payment-method"></span>
+            </div>
         </div>
 
         <!-- Destination (table or delivery address) -->
@@ -119,6 +123,9 @@
         document.getElementById("receipt-customer").textContent = currentUser ? currentUser.name : "Guest";
         document.getElementById("receipt-date").textContent = now.toLocaleDateString();
         document.getElementById("receipt-time").textContent = now.toLocaleTimeString();
+        document.getElementById("receipt-payment-method").textContent = order.paymentMethod === "Cash"
+            ? "Cash (Pay on arrival)"
+            : (order.paymentMethod || "M-Pesa");
 
         // Order type + destination
         const orderMode = order.orderMode || {};
