@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Arizona Fast Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bg { background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0a00 100%); }
+        .input-field {
+            background: #fff8f0; border: 2px solid #e8c99a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none; border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+        }
+    </style>
+</head>
+
+<body style="background: linear-gradient(180deg, #fff8f0 0%, #fdebd0 100%); min-height: 100vh;">
+
+<!-- ===================== -->
+<!-- LOGIN SCREEN -->
+<!-- ===================== -->
+<div id="admin-login-screen" class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-black tracking-widest text-red-700">ARIZONA FAST FOOD</h1>
+            <p class="text-gray-500 text-xs italic mt-1">Staff / Admin Portal</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-7 border border-orange-100">
+            <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-shield text-2xl text-red-700"></i>
+            </div>
+            <h2 class="text-lg font-black text-gray-900 text-center mb-6">Admin Sign In</h2>
+
+            <form onsubmit="return handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1 text-sm">Email</label>
+                    <input id="admin-email" type="email" required placeholder="admin@arizona.com"
+                        class="input-field w-full rounded-xl px-4 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1 text-sm">Password</label>
+                    <input id="admin-password" type="password" required placeholder="••••••••"
+                        class="input-field w-full rounded-xl px-4 py-2 text-sm">
+                </div>
+                <p id="admin-login-error" class="text-red-600 text-xs hidden"></p>
+                <button type="submit"
+                    class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl transition shadow-md">
+                    Sign In
+                </button>
+            </form>
+
+            <p class="text-gray-400 text-xs text-center mt-5 italic">
+                Demo credentials: admin@arizona.com / arizona2026
+            </p>
+        </div>
+
+        <p class="text-center text-gray-400 text-xs mt-6">
+            <a href="index.html" class="hover:text-red-700 transition">&larr; Back to Home</a>
+        </p>
+    </div>
+</div>
+
+<!-- ===================== -->
+<!-- DASHBOARD SCREEN -->
+<!-- ===================== -->
+<div id="admin-dashboard-screen" class="hidden">
+
+    <header class="hero-bg text-white py-5 px-6 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="text-2xl font-black tracking-widest text-yellow-400">ARIZONA FAST FOOD</h1>
+                <p class="text-orange-200 text-xs italic">Admin Dashboard</p>
+            </div>
+            <button onclick="adminLogout()"
+                class="text-gray-300 hover:text-red-400 font-semibold text-sm transition flex items-center gap-2">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10">
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-2xl shadow-md p-5 border border-orange-100">
+                <p class="text-gray-500 text-xs uppercase tracking-wide mb-1">Total Orders</p>
+                <p id="stat-total-orders" class="text-2xl font-black text-gray-900">0</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-md p-5 border border-orange-100">
+                <p class="text-gray-500 text-xs uppercase tracking-wide mb-1">Total Revenue</p>
+                <p id="stat-total-revenue" class="text-2xl font-black text-red-700">Ksh 0</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-md p-5 border border-orange-100">
+                <p class="text-gray-500 text-xs uppercase tracking-wide mb-1">Dine-in Orders</p>
+                <p id="stat-dinein" class="text-2xl font-black text-gray-900">0</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-md p-5 border border-orange-100">
+                <p class="text-gray-500 text-xs uppercase tracking-wide mb-1">Delivery Orders</p>
+                <p id="stat-delivery" class="text-2xl font-black text-gray-900">0</p>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+            <h2 class="text-xl font-black text-gray-900">Order History</h2>
+            <div class="flex gap-2">
+                <button onclick="filterOrders('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-red-700 text-white transition">All</button>
+                <button onclick="filterOrders('dinein')" id="filter-dinein" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-white text-gray-600 border border-gray-200 transition">Dine-in</button>
+                <button onclick="filterOrders('delivery')" id="filter-delivery" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-white text-gray-600 border border-gray-200 transition">Delivery</button>
+            </div>
+        </div>
+
+        <!-- Orders table -->
+        <div class="bg-white rounded-2xl shadow-md border border-orange-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-orange-50 text-left text-gray-600 uppercase text-xs tracking-wide">
+                            <th class="px-5 py-3">Customer</th>
+                            <th class="px-5 py-3">Order Type</th>
+                            <th class="px-5 py-3">Destination</th>
+                            <th class="px-5 py-3">Amount</th>
+                            <th class="px-5 py-3">Payment</th>
+                            <th class="px-5 py-3">Date & Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-orders" class="text-center py-12 text-gray-400 italic hidden">
+                No orders yet.
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    // =====================
+    // ADMIN CREDENTIALS (DEMO ONLY - hardcoded for school project)
+    // =====================
+    const ADMIN_EMAIL = "admin@arizona.com";
+    const ADMIN_PASSWORD = "arizona2026";
+
+    const loginScreen = document.getElementById('admin-login-screen');
+    const dashboardScreen = document.getElementById('admin-dashboard-screen');
+
+    // Check if already logged in as admin
+    if (sessionStorage.getItem('arizona_admin_logged_in') === 'true') {
+        showDashboard();
+    }
+
+    function handleAdminLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('admin-email').value.trim();
+        const password = document.getElementById('admin-password').value;
+        const errorEl = document.getElementById('admin-login-error');
+
+        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            sessionStorage.setItem('arizona_admin_logged_in', 'true');
+            showDashboard();
+        } else {
+            errorEl.textContent = 'Incorrect email or password.';
+            errorEl.classList.remove('hidden');
+        }
+        return false;
+    }
+
+    function adminLogout() {
+        sessionStorage.removeItem('arizona_admin_logged_in');
+        loginScreen.classList.remove('hidden');
+        dashboardScreen.classList.add('hidden');
+    }
+
+    function showDashboard() {
+        loginScreen.classList.add('hidden');
+        dashboardScreen.classList.remove('hidden');
+        loadOrders();
+    }
+
+    // =====================
+    // LOAD & DISPLAY ORDERS
+    // =====================
+    let allOrders = [];
+    let currentFilter = 'all';
+
+    function loadOrders() {
+        allOrders = JSON.parse(localStorage.getItem('arizona_order_history') || '[]');
+        renderStats();
+        renderOrders();
+    }
+
+    function renderStats() {
+        const total = allOrders.length;
+        const revenue = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const dinein = allOrders.filter(o => o.orderMode?.type === 'dinein').length;
+        const delivery = allOrders.filter(o => o.orderMode?.type === 'delivery').length;
+
+        document.getElementById('stat-total-orders').textContent = total;
+        document.getElementById('stat-total-revenue').textContent = `Ksh ${revenue}`;
+        document.getElementById('stat-dinein').textContent = dinein;
+        document.getElementById('stat-delivery').textContent = delivery;
+    }
+
+    function filterOrders(type) {
+        currentFilter = type;
+        ['all', 'dinein', 'delivery'].forEach(f => {
+            const btn = document.getElementById(`filter-${f}`);
+            if (f === type) {
+                btn.className = 'filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-red-700 text-white transition';
+            } else {
+                btn.className = 'filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-white text-gray-600 border border-gray-200 transition';
+            }
+        });
+        renderOrders();
+    }
+
+    function renderOrders() {
+        const tbody = document.getElementById('orders-table-body');
+        const noOrdersDiv = document.getElementById('no-orders');
+
+        let orders = allOrders;
+        if (currentFilter !== 'all') {
+            orders = orders.filter(o => o.orderMode?.type === currentFilter);
+        }
+
+        if (orders.length === 0) {
+            tbody.innerHTML = '';
+            noOrdersDiv.classList.remove('hidden');
+            return;
+        }
+
+        noOrdersDiv.classList.add('hidden');
+        tbody.innerHTML = orders.map(order => {
+            const mode = order.orderMode || {};
+            const isDinein = mode.type === 'dinein';
+
+            const typeLabel = isDinein
+                ? `<span class="inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded-full text-xs font-bold"><i class="fas fa-chair"></i> Dine-in</span>`
+                : `<span class="inline-flex items-center gap-1 bg-orange-50 text-orange-700 px-2 py-1 rounded-full text-xs font-bold"><i class="fas fa-motorcycle"></i> Delivery</span>`;
+
+            const destination = isDinein
+                ? `Table ${mode.tableNumber || '—'}`
+                : (mode.address || '—');
+
+            const paymentBadge = order.paymentMethod === 'Cash'
+                ? `<span class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"><i class="fas fa-money-bill-wave"></i> Cash</span>`
+                : `<span class="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs font-bold"><i class="fas fa-mobile-screen-button"></i> M-Pesa</span>`;
+
+            const dateTime = order.timestamp
+                ? new Date(order.timestamp).toLocaleString()
+                : '—';
+
+            return `
+                <tr class="border-t border-orange-50 hover:bg-orange-50/50 transition">
+                    <td class="px-5 py-4">
+                        <p class="font-bold text-gray-900">${order.customerName || 'Guest'}</p>
+                        <p class="text-gray-400 text-xs">${order.customerPhone || ''}</p>
+                    </td>
+                    <td class="px-5 py-4">${typeLabel}</td>
+                    <td class="px-5 py-4 text-gray-700">${destination}</td>
+                    <td class="px-5 py-4 font-black text-red-700">Ksh ${order.total || 0}</td>
+                    <td class="px-5 py-4">${paymentBadge}</td>
+                    <td class="px-5 py-4 text-gray-500 text-xs">${dateTime}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+</script>
+
+</body>
+</html>
