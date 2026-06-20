@@ -69,6 +69,48 @@
     <p class="text-gray-500 text-xs mt-2">&copy; 2026 Arizona Fast Food. All rights reserved.</p>
 </footer>
 
+<!-- PAYMENT METHOD MODAL -->
+<div id="payment-method-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-80 p-6 text-center">
+        <h3 class="font-black text-gray-900 text-lg mb-1">How will you pay?</h3>
+        <p id="payment-amount-preview" class="text-red-700 font-black text-2xl mb-6"></p>
+
+        <button onclick="selectPaymentMethod('mpesa')"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-mobile-screen-button"></i> Pay with M-Pesa
+        </button>
+        <button onclick="selectPaymentMethod('cash')"
+            class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 rounded-xl transition mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-money-bill-wave"></i> Pay with Cash
+        </button>
+        <button onclick="cancelPaymentMethod()"
+            class="w-full border-2 border-gray-300 text-gray-600 font-semibold py-2 rounded-xl hover:bg-gray-100 transition">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<!-- CASH CONFIRMATION MODAL -->
+<div id="cash-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-80 p-6 text-center">
+        <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-money-bill-wave text-2xl text-gray-700"></i>
+        </div>
+        <h3 class="font-black text-gray-900 text-lg mb-2">Pay with Cash</h3>
+        <p class="text-gray-500 text-sm mb-4">You'll pay <span id="cash-amount" class="font-bold text-gray-900"></span> in cash when your order arrives.</p>
+        <div class="flex gap-3">
+            <button onclick="cancelCash()"
+                class="flex-1 border-2 border-gray-300 text-gray-600 font-semibold py-2 rounded-xl hover:bg-gray-100 transition">
+                Back
+            </button>
+            <button onclick="confirmCash()"
+                class="flex-1 bg-gray-900 hover:bg-black text-white font-semibold py-2 rounded-xl transition">
+                Confirm Order
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- M-PESA MODAL -->
 <div id="mpesa-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl shadow-2xl w-80 p-6 text-center">
