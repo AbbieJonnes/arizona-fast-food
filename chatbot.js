@@ -106,11 +106,11 @@ Keep answers SHORT (2-3 sentences max), warm, and conversational. If you don't k
                 <div id="aff-chat-close">&times;</div>
             </div>
             <div id="aff-chat-messages">
-                <div class="aff-msg bot">Hi! 👋 I'm here to help with anything about Arizona Fast Food — menu, orders, hours, or location. What would you like to know?</div>
+                <div class="aff-msg bot">Hi!<i class="fa-solid fa-hand-spock"></i>I'm here to help with anything about Arizona Fast Food — menu, orders, hours, or location. What would you like to know?</div>
             </div>
             <div id="aff-chat-input-row">
                 <input id="aff-chat-input" type="text" placeholder="Type your question..." />
-                <button id="aff-chat-send">➤</button>
+                <button id="aff-chat-send"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
     `;
